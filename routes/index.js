@@ -1,9 +1,9 @@
-const routerIndex = require('express').Router();
+const router = require('express').Router();
 const userRoutes = require('../routes/users.js');
 const cardRoutes = require('../routes/cards.js');
 
-routerIndex.use('/users', userRoutes);
+router.use(userRoutes);
 
-routerIndex.use('/cards', cardRoutes);
+router.use(cardRoutes);
 
-module.exports = routerIndex;
+module.exports = router;

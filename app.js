@@ -1,8 +1,9 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const path = require("path");
-const routerUsers = require("./routes/users");
-const routerCards = require("./routes/cards");
+const router = require("./routes/index.js");
+//const routerUsers = require("./routes/users");
+//const routerCards = require("./routes/cards");
 const bodyParser = require("body-parser");
 
 const { PORT = 3001 } = process.env;
@@ -29,8 +30,9 @@ mongoose.connect("mongodb://localhost:27017/mestodb", {
 
 app.use(express.static(path.join(__dirname, "public")));
 
-app.use(routerUsers);
-app.use(routerCards);
+app.use(router);
+//app.use(routerUsers);
+//app.use(routerCards);
 
 
 app.use((req, res, next) => {
