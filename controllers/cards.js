@@ -13,17 +13,16 @@ function getCards(req, res) {
 }
 
 function createCard(req, res) {
-  return Card.create({...req.body})
+  return Card.create({ ...req.body })
     .then((card) => {
       if (!reg.test(req.body.link)) {
         res.status(400).send({ message: "Введены некорректные данные!" });
-      }
-      else {
-      res.status(200).send({ data: card });
+      } else {
+        res.status(200).send({ data: card });
       }
     })
     .catch((err) => {
-      console.log(err)
+      console.log(err);
       res.status(500).send({ message: "На сервере произошла ошибка!" });
     });
 }
@@ -31,42 +30,44 @@ function createCard(req, res) {
 function deleteCard(req, res) {
   const id = req.params.cardId;
   return Card.findByIdAndRemove(id)
-  .then((card) => {
-    if (card) {
-      return res.status(200).send({data: card});
-    }
-    return res.status(404).send({ message: "Нет такой карточки!" });
-  })
+    .then((card) => {
+      if (card) {
+        return res.status(200).send({ data: card });
+      }
+      return res.status(404).send({ message: "Нет такой карточки!" });
+    })
     .catch((err) =>
       res.status(500).send({ message: "На сервере произошла ошибка!" })
     );
 }
 
 function likeCard(req, res) {
-
-  return Card.findByIdAndUpdate( req.params.cardId,
-    { $addToSet: { likes: req.body.user._id }},
-    { new: true })
+  return Card.findByIdAndUpdate(
+    req.params.cardId,
+    { $addToSet: { likes: req.body.user._id } },
+    { new: true }
+  )
     .then((card) => {
       if (card) {
-        return res.status(200).send({data: card});
+        return res.status(200).send({ data: card });
       }
       return res.status(404).send({ message: "Нет такой карточки!" });
     })
     .catch((err) => {
-    console.log(err)
-      res.status(500).send({ message: "На сервере произошла ошибка!" })
+      console.log(err);
+      res.status(500).send({ message: "На сервере произошла ошибка!" });
     });
 }
 
 function dislikeCard(req, res) {
-
-  return Card.findByIdAndUpdate( req.params.cardId,
-    { $pull: { likes: req.body.user._id }},
-    { new: true })
+  return Card.findByIdAndUpdate(
+    req.params.cardId,
+    { $pull: { likes: req.body.user._id } },
+    { new: true }
+  )
     .then((card) => {
       if (card) {
-        return res.status(200).send({data: card});
+        return res.status(200).send({ data: card });
       }
       return res.status(404).send({ message: "Нет такой карточки!" });
     })
@@ -75,11 +76,10 @@ function dislikeCard(req, res) {
     );
 }
 
-
 module.exports = {
   getCards,
   createCard,
   deleteCard,
   likeCard,
-  dislikeCard
-}
+  dislikeCard,
+};
