@@ -20,10 +20,6 @@ const cardSchema = new mongoose.Schema({
     type: ObjectId,
     default: [],
   },
-  likes: {
-    type: Array,
-    default: [],
-  },
   createdAt: {
     type: Date,
     default: Date.now,

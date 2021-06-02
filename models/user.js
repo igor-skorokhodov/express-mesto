@@ -3,13 +3,13 @@ const mongoose  = require('mongoose');
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
-    requird: true,
+    required: true,
     minlength: 2,
     maxlength: 30
   },
   about: {
     type: String,
-    requird: true,
+    required: true,
     minlength: 2,
     maxlength: 30
   },
