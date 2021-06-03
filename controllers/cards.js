@@ -5,7 +5,9 @@ function getCards(req, res) {
   return Card.find({})
     .then((cards) => res.status(200).send(cards))
     .catch((err) => {
-      res.status(500).send({ message: `На сервере произошла ошибка! ${err.name}` });
+      res
+        .status(500)
+        .send({ message: `На сервере произошла ошибка! ${err.name}` });
     });
 }
 
@@ -20,13 +22,14 @@ function createCard(req, res) {
           .status(400)
           .send({ message: `Введены некорректные данные! Ошибка ${err.name}` });
       }
-      if (err.name === 'ValidationError') {
+      if (err.name === "ValidationError") {
         res
           .status(400)
           .send({ message: `Введены некорректные данные! Ошибка ${err.name}` });
-      }
-      else {
-        res.status(500).send({ message: `На сервере произошла ошибка ${err.name}!` });
+      } else {
+        res
+          .status(500)
+          .send({ message: `На сервере произошла ошибка ${err.name}!` });
       }
     });
 }
@@ -35,15 +38,17 @@ function deleteCard(req, res) {
   const id = req.params.cardId;
   return Card.findByIdAndRemove(id)
     .then((card) => {
-        res.status(200).send({ data: card })})
+      res.status(200).send({ data: card });
+    })
     .catch((err) => {
-      if (err.name === 'CastError') {
+      if (err.name === "CastError") {
         res
           .status(404)
           .send({ message: `Нет такой карточки! Ошибка ${err.name}` });
-      }
-      else {
-        res.status(500).send({ message: `На сервере произошла ошибка ${err.name}!` });
+      } else {
+        res
+          .status(500)
+          .send({ message: `На сервере произошла ошибка ${err.name}!` });
       }
     });
 }
@@ -58,13 +63,14 @@ function likeCard(req, res) {
       res.status(200).send({ data: card });
     })
     .catch((err) => {
-      if (err.name === 'CastError') {
+      if (err.name === "CastError") {
         res
           .status(404)
           .send({ message: `Нет такой карточки! Ошибка ${err.name}` });
-      }
-      else {
-        res.status(500).send({ message: `На сервере произошла ошибка ${err.name}!` });
+      } else {
+        res
+          .status(500)
+          .send({ message: `На сервере произошла ошибка ${err.name}!` });
       }
     });
 }
@@ -79,13 +85,14 @@ function dislikeCard(req, res) {
       res.status(200).send({ data: card });
     })
     .catch((err) => {
-      if (err.name === 'CastError') {
+      if (err.name === "CastError") {
         res
           .status(404)
           .send({ message: `Нет такой карточки! Ошибка ${err.name}` });
-      }
-      else {
-        res.status(500).send({ message: `На сервере произошла ошибка ${err.name}!` });
+      } else {
+        res
+          .status(500)
+          .send({ message: `На сервере произошла ошибка ${err.name}!` });
       }
     });
 }

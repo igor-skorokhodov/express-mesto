@@ -11,14 +11,6 @@ const app = express();
 
 app.use(bodyParser.json());
 
-db.on("error", (err) => {
-  console.log("error", err);
-});
-
-db.once("open", () => {
-  console.log("we are connected");
-});
-
 mongoose.connect("mongodb://localhost:27017/mestodb", {
   useNewUrlParser: true,
   useCreateIndex: true,
@@ -28,20 +20,14 @@ mongoose.connect("mongodb://localhost:27017/mestodb", {
 
 app.use(express.static(path.join(__dirname, "public")));
 
-app.use(router);
-
 app.use((req, res, next) => {
   req.user = {
-    _id: "60b32a6039f379379c1af5a5", // вставьте сюда _id созданного в предыдущем пункте пользователя
+    _id: "60b32a6039f379379c1af5a5",
   };
-
   next();
 });
 
-app.all("/", function (req, res, next) {
-  console.log("Accessing the secret section ...");
-  next(); // pass control to the next handler
-});
+app.use(router);
 
 app.listen(PORT, () => {
   console.log(`Сервер работает на порту ${PORT}`);
