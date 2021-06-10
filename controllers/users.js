@@ -22,7 +22,13 @@ function getUser(req, res, next) {
     .then((user) => {
       return res.status(200).send({ user });
     })
-    .catch(next);
+    .catch((err) => {
+      if (err.name === "CastError") {
+        next(new reqError("неверно написан ID"));
+      } else {
+        next(err);
+      }
+    });
 }
 
 function aboutUser(req, res, next) {
@@ -77,7 +83,13 @@ function updateUser(req, res, next) {
     .then((user) => {
       res.status(200).send({ data: user });
     })
-    .catch(next);
+    .catch((err) => {
+      if (err.name === "ValidationError") {
+        next(new reqError("ошибка валидации"));
+      } else {
+        next(err);
+      }
+    });
 }
 
 function updateAvatar(req, res, next) {
@@ -94,7 +106,13 @@ function updateAvatar(req, res, next) {
     .then((user) => {
       res.status(200).send({ data: user });
     })
-    .catch(next);
+    .catch((err) => {
+      if (err.name === "ValidationError") {
+        next(new reqError("ошибка валидации"));
+      } else {
+        next(err);
+      }
+    });
 }
 
 function login(req, res, next) {

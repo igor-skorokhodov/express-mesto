@@ -1,5 +1,6 @@
 const mongoose  = require('mongoose');
 const ObjectId = require('mongodb').ObjectID;
+const reg = /^(http|https):\/\/[^ "]+$/;
 
 const cardSchema = new mongoose.Schema({
   name: {
@@ -11,13 +12,19 @@ const cardSchema = new mongoose.Schema({
   link: {
     type: String,
     required: true,
+    validate: {
+      validator: function(link) {
+        return reg.test(link);
+      },
+      message: props => `${props.value} некорректный url`
+    },
   },
   owner: {
-    type: ObjectId,
+    type: String,
 
   },
   likes: {
-    type: ObjectId,
+    type: Array,
     default: [],
   },
   createdAt: {

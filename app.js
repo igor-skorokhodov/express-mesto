@@ -5,6 +5,8 @@ const router = require("./routes/index.js");
 const bodyParser = require("body-parser");
 const { createUser, login } = require("./controllers/users.js");
 const { celebrate, Joi } = require("celebrate");
+const { errors } = require('celebrate');
+const notError = require('./errors/not-found-err.js')
 
 const { PORT = 3001 } = process.env;
 const db = mongoose.connection;
@@ -23,6 +25,7 @@ mongoose.connect("mongodb://localhost:27017/mestodb", {
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use(router);
+
 app.post("/signin", login);
 app.post(
   "/signup",
@@ -35,8 +38,24 @@ app.post(
   createUser
 );
 
+app.use(errors());
+
+app.get('*', function() {
+
+  throw new notError("неверный роут")
+
+});
+
 app.use((err, req, res, next) => {
-  res.status(err.statusCode).send({ message: err.message });
+  const { statusCode = 500, message } = err;
+
+  res
+    .status(statusCode)
+    .send({
+      message: statusCode === 500
+        ? 'На сервере произошла ошибка'
+        : message
+    });
 });
 
 app.listen(PORT, () => {
