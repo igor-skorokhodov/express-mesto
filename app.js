@@ -43,7 +43,8 @@ app.get('*', () => {
   throw new NotError('страница не найдена');
 });
 
-app.use((err, req, res) => {
+// eslint-disable-next-line no-unused-vars
+app.use((err, req, res, next) => {
   const { statusCode = 500, message } = err;
 
   res

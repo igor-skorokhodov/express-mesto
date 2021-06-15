@@ -69,7 +69,7 @@ function likeCard(req, res, next) {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        next(new ReqError('Карточка не найдена'));
+        next(new NotFoundError('Карточка не найдена'));
       } else {
         next(err);
       }
@@ -88,7 +88,7 @@ function dislikeCard(req, res, next) {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        next(new ReqError('неверно написан ID'));
+        next(new NotFoundError('Карточка не найдена'));
       } else {
         next(err);
       }
