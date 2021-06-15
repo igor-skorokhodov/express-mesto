@@ -1,9 +1,9 @@
-const Card = require("../models/card.js");
-const reg = /^(ftp|http|https):\/\/[^ "]+$/;
-const validator = require("validator");
-const reqError = require("../errors/req-error.js");
-const authError = require("../errors/auth-error.js");
-const notFoundError = require("../errors/not-found-err.js");
+/* eslint-disable no-underscore-dangle */
+const Card = require('../models/card');
+
+const ReqError = require('../errors/req-error');
+const ForbiddenError = require('../errors/forb-error');
+const NotFoundError = require('../errors/not-found-err');
 
 function getCards(req, res, next) {
   return Card.find({})
@@ -17,8 +17,8 @@ function createCard(req, res, next) {
       res.status(200).send({ card });
     })
     .catch((err) => {
-      if (err.name === "ValidationError") {
-        next(new reqError("ошибка валидации"));
+      if (err.name === 'ValidationError') {
+        next(new ReqError('ошибка валидации'));
       } else {
         next(err);
       }
@@ -30,30 +30,27 @@ function deleteCard(req, res, next) {
   const userId = req.user._id;
 
   return Card.findById(id)
-    .orFail(new notFoundError("Карточка не найдена"))
+    .orFail(new NotFoundError('Карточка не найдена'))
     .then((card) => {
       if (card.owner === userId) {
         return Card.findByIdAndRemove(id)
-          .orFail(new notFoundError("Карточка не найдена"))
-          .then((card) => {
-            res.status(200).send({ card });
+          .orFail(new ReqError('Карточка не найдена'))
+          .then((data) => {
+            res.status(200).send({ data });
           })
           .catch((err) => {
-            if (err.name === "CastError") {
-              next(new notFoundError("Карточка не найдена"));
+            if (err.name === 'CastError') {
+              next(new ReqError('Карточка не найдена'));
             } else {
               next(err);
             }
           });
-      } else {
-        console.log(card.owner);
-        console.log(userId);
-        next(new authError("Нет прав на удаление карточки"));
       }
+      return next(new ForbiddenError('Нет прав на удаление карточки'));
     })
     .catch((err) => {
-      if (err.name === "CastError") {
-        next(new notFoundError("Карточка не найдена"));
+      if (err.name === 'CastError') {
+        next(new ReqError('Карточка не найдена'));
       } else {
         next(err);
       }
@@ -64,15 +61,15 @@ function likeCard(req, res, next) {
   return Card.findByIdAndUpdate(
     req.params.cardId,
     { $addToSet: { likes: req.user._id } },
-    { new: true }
+    { new: true },
   )
-    .orFail(new notFoundError("Карточка не найдена"))
+    .orFail(new ReqError('Карточка не найдена'))
     .then((card) => {
       res.status(200).send({ data: card });
     })
     .catch((err) => {
-      if (err.name === "CastError") {
-        next(new notFoundError("Карточка не найдена"));
+      if (err.name === 'CastError') {
+        next(new ReqError('Карточка не найдена'));
       } else {
         next(err);
       }
@@ -83,15 +80,15 @@ function dislikeCard(req, res, next) {
   return Card.findByIdAndUpdate(
     req.params.cardId,
     { $pull: { likes: req.user._id } },
-    { new: true }
+    { new: true },
   )
-    .orFail(new notFoundError("Карточка не найдена"))
+    .orFail(new ReqError('Карточка не найдена'))
     .then((card) => {
       res.status(200).send({ data: card });
     })
     .catch((err) => {
-      if (err.name === "CastError") {
-        next(new reqError("неверно написан ID"));
+      if (err.name === 'CastError') {
+        next(new ReqError('неверно написан ID'));
       } else {
         next(err);
       }

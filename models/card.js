@@ -1,5 +1,5 @@
-const mongoose  = require('mongoose');
-const ObjectId = require('mongodb').ObjectID;
+const mongoose = require('mongoose');
+
 const reg = /^(http|https):\/\/[^ "]+$/;
 
 const cardSchema = new mongoose.Schema({
@@ -7,16 +7,16 @@ const cardSchema = new mongoose.Schema({
     type: String,
     required: true,
     minlength: 2,
-    maxlength: 30
+    maxlength: 30,
   },
   link: {
     type: String,
     required: true,
     validate: {
-      validator: function(link) {
+      validator(link) {
         return reg.test(link);
       },
-      message: props => `${props.value} некорректный url`
+      message: (props) => `${props.value} некорректный url`,
     },
   },
   owner: {
@@ -31,6 +31,6 @@ const cardSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
-})
+});
 
-module.exports = mongoose.model('card', cardSchema)
+module.exports = mongoose.model('card', cardSchema);

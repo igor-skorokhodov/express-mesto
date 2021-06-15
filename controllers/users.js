@@ -1,10 +1,11 @@
-const User = require("../models/user.js");
-const validator = require("validator");
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
-const notFoundError = require("../errors/not-found-err.js");
-const reqError = require("../errors/req-error.js");
-const authError = require("../errors/auth-error.js");
+/* eslint-disable no-underscore-dangle */
+const validator = require('validator');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const User = require('../models/user');
+const NotFoundError = require('../errors/not-found-err');
+const ReqError = require('../errors/req-error');
+const AuthError = require('../errors/auth-error');
 
 function getUsers(req, res, next) {
   return User.find({})
@@ -18,13 +19,11 @@ function getUser(req, res, next) {
   const id = req.params.userId;
 
   return User.findById(id)
-    .orFail(new notFoundError("Пользователь не найден"))
-    .then((user) => {
-      return res.status(200).send({ user });
-    })
+    .orFail(new NotFoundError('Пользователь не найден'))
+    .then((user) => res.status(200).send({ user }))
     .catch((err) => {
-      if (err.name === "CastError") {
-        next(new reqError("неверно написан ID"));
+      if (err.name === 'CastError') {
+        next(new ReqError('неверно написан ID'));
       } else {
         next(err);
       }
@@ -35,9 +34,7 @@ function aboutUser(req, res, next) {
   const id = req.user._id;
 
   return User.findById(id)
-    .then((user) => {
-      return res.status(200).send({ user });
-    })
+    .then((user) => res.status(200).send({ user }))
     .catch(next);
 }
 
@@ -45,21 +42,19 @@ function createUser(req, res, next) {
   const { email, password } = req.body;
 
   if (!email || !password) {
-    throw new reqError("Email или пароль не могут быть пустыми");
+    throw new ReqError('Email или пароль не могут быть пустыми');
   }
 
   if (validator.isEmail(email) === false) {
-    throw new reqError("Email не корректен");
+    throw new ReqError('Email не корректен');
   }
 
   bcrypt
     .hash(req.body.password, 10)
-    .then((hash) =>
-      User.create({
-        email: req.body.email,
-        password: hash,
-      })
-    )
+    .then((hash) => User.create({
+      email: req.body.email,
+      password: hash,
+    }))
     .then((user) => {
       res.status(200).send({ user });
     })
@@ -78,14 +73,14 @@ function updateUser(req, res, next) {
     {
       new: true,
       runValidators: true,
-    }
+    },
   )
     .then((user) => {
       res.status(200).send({ data: user });
     })
     .catch((err) => {
-      if (err.name === "ValidationError") {
-        next(new reqError("ошибка валидации"));
+      if (err.name === 'ValidationError') {
+        next(new ReqError('ошибка валидации'));
       } else {
         next(err);
       }
@@ -101,14 +96,14 @@ function updateAvatar(req, res, next) {
     {
       new: true,
       runValidators: true,
-    }
+    },
   )
     .then((user) => {
       res.status(200).send({ data: user });
     })
     .catch((err) => {
-      if (err.name === "ValidationError") {
-        next(new reqError("ошибка валидации"));
+      if (err.name === 'ValidationError') {
+        next(new ReqError('ошибка валидации'));
       } else {
         next(err);
       }
@@ -118,24 +113,34 @@ function updateAvatar(req, res, next) {
 function login(req, res, next) {
   const { email, password } = req.body;
 
+  if (!email || !password) {
+    throw new ReqError('Email или пароль не могут быть пустыми');
+  }
+
   User.findOne({ email })
-    .select("+password")
+    .select('+password')
     .then((user) => {
       if (!user) {
-        throw new authError("Неправильные почта или пароль");
+        throw new AuthError('Неправильные почта или пароль');
       }
 
       return bcrypt.compare(password, user.password).then((matched) => {
         if (!matched) {
-          throw new authError("Неправильные почта или пароль");
+          throw new AuthError('Неправильные почта или пароль');
         }
-        const token = jwt.sign({ _id: user._id }, "some-secret-key", {
-          expiresIn: "7d",
+        const token = jwt.sign({ _id: user._id }, 'some-secret-key', {
+          expiresIn: '7d',
         });
         res.send({ token });
       });
     })
-    .catch(next);
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        next(new ReqError('ошибка валидации'));
+      } else {
+        next(err);
+      }
+    });
 }
 
 module.exports = {
