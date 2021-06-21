@@ -9,6 +9,7 @@ const router = require('./routes/index');
 const NotError = require('./errors/not-found-err');
 const { requestLogger, errorLogger } = require('./middlewares/logger'); 
 const cors = require('cors');
+
 const options = {  
   origin: [    
     'http://mesto.ivladsk.nomoredomains.club',
@@ -25,7 +26,15 @@ const { PORT = 3001 } = process.env;
 
 const app = express();
 
-app.use('*', cors(options))
+app.use('*', cors(options));
+
+app.use(function(req, res, next) {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+  res.header('Access-Control-Allow-Methods', 'GET,HEAD,PUT,PATCH,POST,DELETE');
+
+  next();
+});
 
 app.use(bodyParser.json());
 
