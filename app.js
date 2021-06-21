@@ -34,9 +34,9 @@ const { PORT = 3001 } = process.env;
 
 const app = express();
 
-app.use(helmet()); 
-
 app.use('*', cors(corsOption));
+
+app.use(helmet()); 
 
 app.use(bodyParser.json());
 
