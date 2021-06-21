@@ -9,24 +9,30 @@ const router = require('./routes/index');
 const NotError = require('./errors/not-found-err');
 const { requestLogger, errorLogger } = require('./middlewares/logger'); 
 const cors = require('cors');
+const helmet = require('helmet');
 
-const options = {  
-  origin: [    
-    'http://mesto.ivladsk.nomoredomains.club',
-    'http://api.mesto.ivladsk.nomoredomains.club'     
-  ],  
-  methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE'],  
-  preflightContinue: false,  
-  optionsSuccessStatus: 204,  
-  allowedHeaders: ['Content-Type', 'origin', 'Authorization'],  
-  credentials: true,
-};
+const CORS_WHITELIST = [
+  'http://mesto.ivladsk.nomoredomains.club',
+  'http:/api.mesto.ivladsk.nomoredomains.club'
+]; 
+const corsOption = { 
+  credentials: true, 
+  origin: function checkCorsList(origin, callback) { 
+    if (CORS_WHITELIST.indexOf(origin) !== -1 || !origin) { 
+      callback(null, true); 
+    } else { 
+      callback(new Error('Not allowed by CORS')); 
+    } 
+  }, 
+}; 
 
 const { PORT = 3001 } = process.env;
 
 const app = express();
 
-app.use('*', cors(options));
+app.use(helmet()); 
+
+app.use('*', cors(corsOption));
 
 app.use(function(req, res, next) {
   res.header('Access-Control-Allow-Origin', '*');
@@ -37,6 +43,8 @@ app.use(function(req, res, next) {
 });
 
 app.use(bodyParser.json());
+
+app.use(express.urlencoded({ extended: true }));
 
 mongoose.connect('mongodb://localhost:27017/mestodb', {
   useNewUrlParser: true,
