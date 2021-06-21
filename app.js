@@ -7,6 +7,7 @@ const { errors } = require('celebrate');
 const { createUser, login } = require('./controllers/users');
 const router = require('./routes/index');
 const NotError = require('./errors/not-found-err');
+const { requestLogger, errorLogger } = require('./middlewares/logger'); 
 
 const { PORT = 3001 } = process.env;
 
@@ -23,9 +24,15 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use(router);
+app.use(requestLogger);
 
-app.post('/signin', login);
+app.use(router, () => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+});
+
+app.post('/signin', login, () => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+});
 app.post(
   '/signup',
   celebrate({
@@ -34,14 +41,19 @@ app.post(
       password: Joi.string().required(),
     }).unknown(true),
   }),
-  createUser,
+  createUser, () => {
+    res.setHeader("Access-Control-Allow-Origin", "*");
+  }
 );
-
-app.use(errors());
 
 app.get('*', () => {
   throw new NotError('страница не найдена');
 });
+
+app.use(errorLogger);
+
+app.use(errors());
+
 
 // eslint-disable-next-line no-unused-vars
 app.use((err, req, res, next) => {
