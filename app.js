@@ -15,6 +15,7 @@ const CORS_WHITELIST = [
   'http://mesto.ivladsk.nomoredomains.club',
   'http:/api.mesto.ivladsk.nomoredomains.club'
 ]; 
+
 const corsOption = { 
   credentials: true, 
   origin: function checkCorsList(origin, callback) { 
@@ -33,14 +34,6 @@ const app = express();
 app.use(helmet()); 
 
 app.use('*', cors(corsOption));
-
-app.use(function(req, res, next) {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-  res.header('Access-Control-Allow-Methods', 'GET,HEAD,PUT,PATCH,POST,DELETE');
-
-  next();
-});
 
 app.use(bodyParser.json());
 
