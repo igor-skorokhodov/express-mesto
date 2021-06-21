@@ -13,7 +13,10 @@ const helmet = require('helmet');
 
 const CORS_WHITELIST = [
   'http://mesto.ivladsk.nomoredomains.club',
-  'http://api.mesto.ivladsk.nomoredomains.club'
+  'http://api.mesto.ivladsk.nomoredomains.club',
+  'http://localhost:3001',
+  'https://mesto.ivladsk.nomoredomains.club',
+  'https://api.mesto.ivladsk.nomoredomains.club',
 ]; 
 
 const corsOption = { 
