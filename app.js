@@ -34,8 +34,6 @@ const { PORT = 3001 } = process.env;
 
 const app = express();
 
-app.use('*', cors(corsOption));
-
 app.use(helmet()); 
 
 app.use(bodyParser.json());
@@ -52,6 +50,8 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(requestLogger);
+
+app.use('*', cors(corsOption));
 
 app.use(router);
 
