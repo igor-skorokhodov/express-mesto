@@ -8,10 +8,23 @@ const { createUser, login } = require('./controllers/users');
 const router = require('./routes/index');
 const NotError = require('./errors/not-found-err');
 const { requestLogger, errorLogger } = require('./middlewares/logger'); 
+const cors = require('cors');
+const options = {  
+  origin: [    
+    'http://mesto.ivladsk.nomoredomains.club'      
+  ],  
+  methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE'],  
+  preflightContinue: false,  
+  optionsSuccessStatus: 204,  
+  allowedHeaders: ['Content-Type', 'origin', 'Authorization'],  
+  credentials: true,
+};
 
 const { PORT = 3001 } = process.env;
 
 const app = express();
+
+app.use('*', cors(options))
 
 app.use(bodyParser.json());
 
@@ -26,13 +39,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(requestLogger);
 
-app.use(router => {
-  res.setHeader("Access-Control-Allow-Origin", "*");
-});
+app.use(router);
 
-app.post('/signin', login => {
-  res.setHeader("Access-Control-Allow-Origin", "*");
-});
+app.post('/signin', login);
 
 app.post(
   '/signup',
@@ -42,9 +51,7 @@ app.post(
       password: Joi.string().required(),
     }).unknown(true),
   }),
-  createUser => {res.setHeader("Access-Control-Allow-Origin", "*");
-}
-);
+  createUser);
 
 app.get('*', () => {
   throw new NotError('страница не найдена');
