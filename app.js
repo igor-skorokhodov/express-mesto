@@ -11,7 +11,8 @@ const { requestLogger, errorLogger } = require('./middlewares/logger');
 const cors = require('cors');
 const options = {  
   origin: [    
-    'http://mesto.ivladsk.nomoredomains.club'      
+    'http://mesto.ivladsk.nomoredomains.club',
+    'http://api.mesto.ivladsk.nomoredomains.club'     
   ],  
   methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE'],  
   preflightContinue: false,  
