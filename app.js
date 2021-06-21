@@ -52,7 +52,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(requestLogger);
 
-app.use('*', cors(corsOption));
+app.use(cors(corsOption));
 
 app.use(router);
 
