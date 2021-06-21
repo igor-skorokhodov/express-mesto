@@ -26,13 +26,14 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(requestLogger);
 
-app.use(router, () => {
+app.use(router => {
   res.setHeader("Access-Control-Allow-Origin", "*");
 });
 
-app.post('/signin', login, () => {
+app.post('/signin', login => {
   res.setHeader("Access-Control-Allow-Origin", "*");
 });
+
 app.post(
   '/signup',
   celebrate({
@@ -41,9 +42,8 @@ app.post(
       password: Joi.string().required(),
     }).unknown(true),
   }),
-  createUser, () => {
-    res.setHeader("Access-Control-Allow-Origin", "*");
-  }
+  createUser => {res.setHeader("Access-Control-Allow-Origin", "*");
+}
 );
 
 app.get('*', () => {
