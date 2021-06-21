@@ -22,6 +22,7 @@ const CORS_WHITELIST = [
 const corsOption = { 
   credentials: true, 
   origin: function checkCorsList(origin, callback) { 
+    console.log(origin);
     if (CORS_WHITELIST.indexOf(origin) !== -1 || !origin) { 
       callback(null, true); 
     } else { 
