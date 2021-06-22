@@ -76,7 +76,7 @@ function updateUser(req, res, next) {
     },
   )
     .then((user) => {
-      res.status(200).send({ data: user });
+      res.status(200).send({ user });
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
@@ -99,7 +99,7 @@ function updateAvatar(req, res, next) {
     },
   )
     .then((user) => {
-      res.status(200).send({ data: user });
+      res.status(200).send({ user });
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {

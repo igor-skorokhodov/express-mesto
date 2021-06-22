@@ -65,7 +65,7 @@ function likeCard(req, res, next) {
   )
     .orFail(new ReqError('Карточка не найдена'))
     .then((card) => {
-      res.status(200).send({ data: card });
+      res.status(200).send({ card });
     })
     .catch((err) => {
       if (err.name === 'CastError') {
@@ -84,7 +84,7 @@ function dislikeCard(req, res, next) {
   )
     .orFail(new ReqError('Карточка не найдена'))
     .then((card) => {
-      res.status(200).send({ data: card });
+      res.status(200).send({ card });
     })
     .catch((err) => {
       if (err.name === 'CastError') {
