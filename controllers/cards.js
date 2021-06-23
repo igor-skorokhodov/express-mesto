@@ -66,7 +66,7 @@ function likeCard(req, res, next) {
     .populate('likes')
     .orFail(new ReqError('Карточка не найдена'))
     .then((card) => {
-      res.status(200).send({ });
+      res.status(200).send(card);
     })
     .catch((err) => {
       if (err.name === 'CastError') {
@@ -86,7 +86,7 @@ function dislikeCard(req, res, next) {
     .populate('likes')
     .orFail(new ReqError('Карточка не найдена'))
     .then((card) => {
-      res.status(200).send({ });
+      res.status(200).send(card);
     })
     .catch((err) => {
       if (err.name === 'CastError') {
