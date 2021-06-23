@@ -1,4 +1,5 @@
 const express = require('express');
+require('dotenv').config();
 const mongoose = require('mongoose');
 const path = require('path');
 const bodyParser = require('body-parser');
@@ -10,6 +11,7 @@ const NotError = require('./errors/not-found-err');
 const { requestLogger, errorLogger } = require('./middlewares/logger'); 
 const cors = require('cors');
 const helmet = require('helmet');
+
 
 const CORS_WHITELIST = [
   'http://mesto.ivladsk.nomoredomains.club',
