@@ -62,7 +62,7 @@ function createUser(req, res, next) {
 }
 
 function updateUser(req, res, next) {
-  const id = req.user._id;
+  const id = req.user;
   console.log(req.user._id)
 
   return User.findByIdAndUpdate(
@@ -89,7 +89,7 @@ function updateUser(req, res, next) {
 }
 
 function updateAvatar(req, res, next) {
-  const id = req.user._id;
+  const id = req.user;
 
   return User.findByIdAndUpdate(
     id,
