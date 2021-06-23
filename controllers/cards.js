@@ -58,6 +58,7 @@ function deleteCard(req, res, next) {
 }
 
 function likeCard(req, res, next) {
+  console.log(req)
   return Card.findByIdAndUpdate(
     req.params.cardId,
     { $addToSet: { likes: req.user._id } },
@@ -78,6 +79,7 @@ function likeCard(req, res, next) {
 }
 
 function dislikeCard(req, res, next) {
+  console.log(req)
   return Card.findByIdAndUpdate(
     req.params.cardId,
     { $pull: { likes: req.user._id } },
