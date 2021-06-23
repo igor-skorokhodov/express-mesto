@@ -63,6 +63,7 @@ function likeCard(req, res, next) {
     { $addToSet: { likes: req.user._id } },
     { new: true },
   )
+    .populate('likes')
     .orFail(new ReqError('Карточка не найдена'))
     .then((card) => {
       res.status(200).send({ card });
@@ -82,6 +83,7 @@ function dislikeCard(req, res, next) {
     { $pull: { likes: req.user._id } },
     { new: true },
   )
+    .populate('likes')
     .orFail(new ReqError('Карточка не найдена'))
     .then((card) => {
       res.status(200).send({ card });
