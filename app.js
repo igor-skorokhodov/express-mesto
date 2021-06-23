@@ -58,6 +58,12 @@ app.use(cors(corsOption));
 
 app.use(router);
 
+app.get('/crash-test', () => {
+  setTimeout(() => {
+    throw new Error('Сервер сейчас упадёт');
+  }, 0);
+}); 
+
 app.post('/signin', login);
 
 app.post(
