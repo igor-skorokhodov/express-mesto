@@ -129,7 +129,7 @@ function login(req, res, next) {
         if (!matched) {
           throw new AuthError('Неправильные почта или пароль');
         }
-        const token = jwt.sign({ _id: user._id }, 'some-secret-key', {
+        const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret', {
           expiresIn: '7d',
         });
         res.send({ token: token, user: user });
