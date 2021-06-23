@@ -58,7 +58,6 @@ function deleteCard(req, res, next) {
 }
 
 function likeCard(req, res, next) {
-  console.log(req)
   return Card.findByIdAndUpdate(
     req.params.cardId,
     { $addToSet: { likes: req.user._id } },
@@ -67,7 +66,7 @@ function likeCard(req, res, next) {
     .populate('likes')
     .orFail(new ReqError('Карточка не найдена'))
     .then((card) => {
-      res.status(200).send({ card });
+      res.status(200).send({ });
     })
     .catch((err) => {
       if (err.name === 'CastError') {
@@ -79,7 +78,6 @@ function likeCard(req, res, next) {
 }
 
 function dislikeCard(req, res, next) {
-  console.log(req)
   return Card.findByIdAndUpdate(
     req.params.cardId,
     { $pull: { likes: req.user._id } },
@@ -88,7 +86,7 @@ function dislikeCard(req, res, next) {
     .populate('likes')
     .orFail(new ReqError('Карточка не найдена'))
     .then((card) => {
-      res.status(200).send({ card });
+      res.status(200).send({ });
     })
     .catch((err) => {
       if (err.name === 'CastError') {
