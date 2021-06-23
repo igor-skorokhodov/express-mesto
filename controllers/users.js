@@ -123,7 +123,6 @@ function login(req, res, next) {
       if (!user) {
         throw new AuthError('Неправильные почта или пароль');
       }
-
       return bcrypt.compare(password, user.password).then((matched) => {
         if (!matched) {
           throw new AuthError('Неправильные почта или пароль');
@@ -131,7 +130,7 @@ function login(req, res, next) {
         const token = jwt.sign({ _id: user._id }, 'some-secret-key', {
           expiresIn: '7d',
         });
-        res.send({ token });
+        res.send({ token, user });
       });
     })
     .catch((err) => {
