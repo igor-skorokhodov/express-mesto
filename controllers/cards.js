@@ -7,7 +7,7 @@ const NotFoundError = require('../errors/not-found-err');
 
 function getCards(req, res, next) {
   return Card.find({})
-    .then((card) => res.status(200).send({card}))
+    .then((cards) => res.status(200).send(cards))
     .catch(next);
 }
 
@@ -66,7 +66,7 @@ function likeCard(req, res, next) {
     .populate('likes')
     .orFail(new ReqError('Карточка не найдена'))
     .then((card) => {
-      res.status(200).send({card});
+      res.status(200).send(card);
     })
     .catch((err) => {
       if (err.name === 'CastError') {
@@ -86,7 +86,7 @@ function dislikeCard(req, res, next) {
     .populate('likes')
     .orFail(new ReqError('Карточка не найдена'))
     .then((card) => {
-      res.status(200).send({card});
+      res.status(200).send(card);
     })
     .catch((err) => {
       if (err.name === 'CastError') {
