@@ -65,6 +65,7 @@ function createUser(req, res, next) {
 
 function updateUser(req, res, next) {
   const id = req.user;
+  console.log(req)
 
   return User.findByIdAndUpdate(
     id,
