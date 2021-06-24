@@ -17,7 +17,8 @@ function getUsers(req, res, next) {
 }
 
 function getUser(req, res, next) {
-  const id = req.params.userId;
+  const id = req.user._id;
+  console.log(req)
 
   return User.findById(id)
     .orFail(new NotFoundError('Пользователь не найден'))
@@ -33,7 +34,6 @@ function getUser(req, res, next) {
 
 function aboutUser(req, res, next) {
   const id = req.user._id;
-  console.log(req);
 
   return User.findById(id)
     .then((user) => res.status(200).send({ user }))
