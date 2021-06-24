@@ -32,7 +32,7 @@ function getUser(req, res, next) {
 }
 
 function aboutUser(req, res, next) {
-  const id = req.user;
+  const id = req.user._id;
   console.log(req);
 
   return User.findById(id)
@@ -64,8 +64,7 @@ function createUser(req, res, next) {
 }
 
 function updateUser(req, res, next) {
-  const id = req.user;
-  console.log(req)
+  const id = req.user._id;
 
   return User.findByIdAndUpdate(
     id,
