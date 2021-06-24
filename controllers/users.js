@@ -33,7 +33,7 @@ function getUser(req, res, next) {
 
 function aboutUser(req, res, next) {
   const id = req.user;
-  console.log(req)
+  console.log(req);
 
   return User.findById(id)
     .then((user) => res.status(200).send({ user }))
