@@ -6,6 +6,7 @@ const { celebrate, Joi } = require('celebrate');
 const { errors } = require('celebrate');
 const cors = require('cors');
 const helmet = require('helmet');
+const rateLimit = require('express-rate-limit');
 const { createUser, login } = require('./controllers/users');
 const router = require('./routes/index');
 const NotError = require('./errors/not-found-err');
@@ -14,11 +15,15 @@ const { requestLogger, errorLogger } = require('./middlewares/logger');
 
 const CORS_WHITELIST = [
   'http://mesto.ivladsk.nomoredomains.club',
-  'http://api.mesto.ivladsk.nomoredomains.club',
   'http://localhost:3001',
+  'http://localhost:3002',
   'https://mesto.ivladsk.nomoredomains.club',
-  'https://api.mesto.ivladsk.nomoredomains.club',
 ];
+
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 100,
+});
 
 const corsOption = {
   credentials: true,
@@ -52,13 +57,15 @@ app.use(requestLogger);
 
 app.use(cors(corsOption));
 
+app.use(limiter);
+
 app.use(router);
 
 app.post('/signin',
   celebrate({
     body: Joi.object()
       .keys({
-        name: Joi.string().required().min(2).max(30),
+        email: Joi.string().required().min(2).max(30),
         password: Joi.string().required(),
       })
       .unknown(true),

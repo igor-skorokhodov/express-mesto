@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
+const ObjectId = require('mongodb').ObjectID;
 
 const cardSchema = new mongoose.Schema({
   name: {
@@ -20,7 +21,8 @@ const cardSchema = new mongoose.Schema({
   },
   owner: {
     // eslint-disable-next-line no-undef
-    type: ObjectID,
+    type: ObjectId,
+    required: true,
   },
   likes: {
     type: Array,
