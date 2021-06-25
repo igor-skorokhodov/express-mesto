@@ -1,17 +1,17 @@
 const express = require('express');
 require('dotenv').config();
 const mongoose = require('mongoose');
-const path = require('path');
 const bodyParser = require('body-parser');
 const { celebrate, Joi } = require('celebrate');
 const { errors } = require('celebrate');
+const cors = require('cors');
+const helmet = require('helmet');
+const rateLimit = require('express-rate-limit');
 const { createUser, login } = require('./controllers/users');
 const router = require('./routes/index');
 const NotError = require('./errors/not-found-err');
-const { requestLogger, errorLogger } = require('./middlewares/logger'); 
-const cors = require('cors');
-const helmet = require('helmet');
-
+const ServerError = require('./errors/server-error');
+const { requestLogger, errorLogger } = require('./middlewares/logger');
 
 const CORS_WHITELIST = [
   'http://mesto.ivladsk.nomoredomains.club',
@@ -19,25 +19,31 @@ const CORS_WHITELIST = [
   'http://localhost:3001',
   'https://mesto.ivladsk.nomoredomains.club',
   'https://api.mesto.ivladsk.nomoredomains.club',
-]; 
+];
 
-const corsOption = { 
-  credentials: true, 
-  origin: function checkCorsList(origin, callback) { 
-    console.log(origin);
-    if (CORS_WHITELIST.indexOf(origin) !== -1 || !origin) { 
-      callback(null, true); 
-    } else { 
-      callback(new Error('Not allowed by CORS')); 
-    } 
-  }, 
-}; 
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 100,
+});
+
+const corsOption = {
+  credentials: true,
+  origin: function checkCorsList(origin, callback) {
+    if (CORS_WHITELIST.indexOf(origin) !== -1 || !origin) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+};
 
 const { PORT = 3001 } = process.env;
 
 const app = express();
 
-app.use(helmet()); 
+app.use(helmet());
+
+app.use(limiter);
 
 app.use(bodyParser.json());
 
@@ -50,21 +56,21 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
   useUnifiedTopology: true,
 });
 
-app.use(express.static(path.join(__dirname, 'public')));
-
 app.use(requestLogger);
 
 app.use(cors(corsOption));
 
 app.use(router);
 
-app.get('/crash-test', () => {
-  setTimeout(() => {
-    throw new Error('Сервер сейчас упадёт');
-  }, 0);
-}); 
-
-app.post('/signin', login);
+app.post('/signin',
+  celebrate({
+    body: Joi.object()
+      .keys({
+        name: Joi.string().required().min(2).max(30),
+        password: Joi.string().required(),
+      })
+      .unknown(true),
+  }), login);
 
 app.post(
   '/signup',
@@ -74,7 +80,8 @@ app.post(
       password: Joi.string().required(),
     }).unknown(true),
   }),
-  createUser);
+  createUser,
+);
 
 app.get('*', () => {
   throw new NotError('страница не найдена');
@@ -84,19 +91,7 @@ app.use(errorLogger);
 
 app.use(errors());
 
-
-// eslint-disable-next-line no-unused-vars
-app.use((err, req, res, next) => {
-  const { statusCode = 500, message } = err;
-
-  res
-    .status(statusCode)
-    .send({
-      message: statusCode === 500
-        ? 'На сервере произошла ошибка'
-        : message,
-    });
-});
+app.use(ServerError);
 
 app.listen(PORT, () => {
   // eslint-disable-next-line no-console

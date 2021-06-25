@@ -6,6 +6,8 @@ const User = require('../models/user');
 const NotFoundError = require('../errors/not-found-err');
 const ReqError = require('../errors/req-error');
 const AuthError = require('../errors/auth-error');
+const ConflictError = require('../errors/conflict-error');
+
 const { NODE_ENV, JWT_SECRET } = process.env;
 
 function getUsers(req, res, next) {
@@ -18,7 +20,6 @@ function getUsers(req, res, next) {
 
 function getUser(req, res, next) {
   const id = req.user._id;
-  console.log(req)
 
   return User.findById(id)
     .orFail(new NotFoundError('Пользователь не найден'))
@@ -51,6 +52,14 @@ function createUser(req, res, next) {
     throw new ReqError('Email не корректен');
   }
 
+  User.findOne({ email })
+    .then((user) => {
+      if (user) {
+        throw new ConflictError('Такой пользователь уже существует');
+      }
+    })
+    .catch(next);
+
   bcrypt
     .hash(req.body.password, 10)
     .then((hash) => User.create({
@@ -58,6 +67,8 @@ function createUser(req, res, next) {
       password: hash,
     }))
     .then((user) => {
+      // eslint-disable-next-line no-param-reassign
+      user.password = null;
       res.status(200).send({ user });
     })
     .catch(next);
@@ -132,7 +143,7 @@ function login(req, res, next) {
         const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret', {
           expiresIn: '7d',
         });
-        res.send({ token: token, user: user });
+        res.send({ token, user });
       });
     })
     .catch((err) => {

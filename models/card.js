@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
-
-const reg = /^(http|https):\/\/[^ "]+$/;
+const validator = require('validator');
 
 const cardSchema = new mongoose.Schema({
   name: {
@@ -14,14 +13,14 @@ const cardSchema = new mongoose.Schema({
     required: true,
     validate: {
       validator(link) {
-        return reg.test(link);
+        return validator.isURL(link);
       },
       message: (props) => `${props.value} некорректный url`,
     },
   },
   owner: {
-    type: String,
-
+    // eslint-disable-next-line no-undef
+    type: ObjectID,
   },
   likes: {
     type: Array,

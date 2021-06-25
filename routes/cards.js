@@ -10,6 +10,7 @@ const {
 } = require('../controllers/cards');
 
 cardRoutes.get('/cards', auth, getCards);
+
 cardRoutes.post(
   '/cards',
   celebrate({
@@ -23,8 +24,32 @@ cardRoutes.post(
   auth,
   createCard,
 );
-cardRoutes.delete('/cards/:cardId', auth, deleteCard);
-cardRoutes.put('/cards/:cardId/likes', auth, likeCard);
-cardRoutes.delete('/cards/:cardId/likes', auth, dislikeCard);
+
+cardRoutes.delete('/cards/:cardId',
+  celebrate({
+    params: Joi.object()
+      .keys({
+        cardId: Joi.string().hex().min(24).max(24),
+      })
+      .unknown(true),
+  }), auth, deleteCard);
+
+cardRoutes.put('/cards/:cardId/likes',
+  celebrate({
+    params: Joi.object()
+      .keys({
+        cardId: Joi.string().hex().min(24).max(24),
+      })
+      .unknown(true),
+  }), auth, likeCard);
+
+cardRoutes.delete('/cards/:cardId/likes',
+  celebrate({
+    params: Joi.object()
+      .keys({
+        cardId: Joi.string().hex().min(24).max(24),
+      })
+      .unknown(true),
+  }), auth, dislikeCard);
 
 module.exports = cardRoutes;

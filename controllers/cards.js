@@ -32,7 +32,7 @@ function deleteCard(req, res, next) {
   return Card.findById(id)
     .orFail(new NotFoundError('Карточка не найдена'))
     .then((card) => {
-      if (card.owner === userId) {
+      if (card.owner.toString() === userId) {
         return Card.findByIdAndRemove(id)
           .orFail(new ReqError('Карточка не найдена'))
           .then((data) => {
