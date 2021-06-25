@@ -43,8 +43,6 @@ const app = express();
 
 app.use(helmet());
 
-app.use(limiter);
-
 app.use(bodyParser.json());
 
 app.use(express.urlencoded({ extended: true }));
@@ -59,6 +57,8 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
 app.use(requestLogger);
 
 app.use(cors(corsOption));
+
+app.use(limiter);
 
 app.use(router);
 
