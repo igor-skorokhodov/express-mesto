@@ -6,7 +6,6 @@ const { celebrate, Joi } = require('celebrate');
 const { errors } = require('celebrate');
 const cors = require('cors');
 const helmet = require('helmet');
-const rateLimit = require('express-rate-limit');
 const { createUser, login } = require('./controllers/users');
 const router = require('./routes/index');
 const NotError = require('./errors/not-found-err');
@@ -20,11 +19,6 @@ const CORS_WHITELIST = [
   'https://mesto.ivladsk.nomoredomains.club',
   'https://api.mesto.ivladsk.nomoredomains.club',
 ];
-
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 100,
-});
 
 const corsOption = {
   credentials: true,
@@ -57,8 +51,6 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
 app.use(requestLogger);
 
 app.use(cors(corsOption));
-
-app.use(limiter);
 
 app.use(router);
 
