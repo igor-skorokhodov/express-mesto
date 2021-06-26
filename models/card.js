@@ -21,7 +21,7 @@ const cardSchema = new mongoose.Schema({
   },
   owner: {
     // eslint-disable-next-line no-undef
-    type: ObjectId,
+    type: String,
     required: true,
   },
   likes: {

@@ -16,7 +16,7 @@ userRoutes.get('/users/:userId',
   celebrate({
     params: Joi.object()
       .keys({
-        userId: Joi.string().hex().min(24).max(24),
+        id: Joi.string().hex().min(24).max(24),
       })
       .unknown(true),
   }), auth, getUser);
