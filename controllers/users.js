@@ -34,7 +34,7 @@ function getUser(req, res, next) {
 }
 
 function aboutUser(req, res, next) {
-  const id = req.user._id;
+  const { id } = req.params;
 
   return User.findById(id)
     .then((user) => res.status(200).send({ user }))
@@ -67,8 +67,7 @@ function createUser(req, res, next) {
       password: hash,
     }))
     .then((user) => {
-      // eslint-disable-next-line no-param-reassign
-      user.password = null;
+      res.user.password = null;
       res.status(200).send({ user });
     })
     .catch(next);
