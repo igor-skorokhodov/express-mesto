@@ -1,6 +1,7 @@
 const cardRoutes = require('express').Router();
 const { celebrate, Joi } = require('celebrate');
 const auth = require('../middlewares/auth');
+const method = require('../errors/validation-error');
 const {
   getCards,
   createCard,
@@ -17,7 +18,8 @@ cardRoutes.post(
     body: Joi.object()
       .keys({
         name: Joi.string().required().min(2).max(30),
-        link: Joi.string().required(),
+        link: Joi.string().required().custom(method),
+        owner: Joi.string(),
       })
       .unknown(true),
   }),
@@ -29,7 +31,7 @@ cardRoutes.delete('/cards/:cardId',
   celebrate({
     params: Joi.object()
       .keys({
-        cardId: Joi.string().hex().min(24).max(24),
+        cardId: Joi.string().hex().length(24),
       })
       .unknown(true),
   }), auth, deleteCard);
@@ -38,7 +40,7 @@ cardRoutes.put('/cards/:cardId/likes',
   celebrate({
     params: Joi.object()
       .keys({
-        cardId: Joi.string().hex().min(24).max(24),
+        cardId: Joi.string().hex().length(24),
       })
       .unknown(true),
   }), auth, likeCard);
@@ -47,7 +49,7 @@ cardRoutes.delete('/cards/:cardId/likes',
   celebrate({
     params: Joi.object()
       .keys({
-        cardId: Joi.string().hex().min(24).max(24),
+        cardId: Joi.string().hex().length(24),
       })
       .unknown(true),
   }), auth, dislikeCard);

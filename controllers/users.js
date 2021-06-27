@@ -20,7 +20,6 @@ function getUsers(req, res, next) {
 
 function getUser(req, res, next) {
   const id = req.user._id;
-  console.log(req.params)
 
   return User.findById(id)
     .orFail(new NotFoundError('Пользователь не найден'))
@@ -76,9 +75,7 @@ function createUser(req, res, next) {
 }
 
 function updateUser(req, res, next) {
-  const id = req.user._id;
-  console.log(req.params)
-  console.log(req.user)
+  const id = req.params.userId;
 
   return User.findByIdAndUpdate(
     id,
@@ -104,7 +101,7 @@ function updateUser(req, res, next) {
 }
 
 function updateAvatar(req, res, next) {
-  const id = req.user;
+  const id = req.params.userId;
 
   return User.findByIdAndUpdate(
     id,

@@ -1,4 +1,3 @@
-/* eslint-disable no-underscore-dangle */
 const Card = require('../models/card');
 
 const ReqError = require('../errors/req-error');

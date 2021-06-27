@@ -42,8 +42,6 @@ const app = express();
 
 app.use(helmet());
 
-app.use(limiter);
-
 app.use(bodyParser.json());
 
 mongoose.connect('mongodb://localhost:27017/mestodb', {
@@ -54,6 +52,8 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
 });
 
 app.use(requestLogger);
+
+app.use(limiter);
 
 app.use(cors(corsOption));
 
@@ -90,7 +90,4 @@ app.use(errors());
 
 app.use(ServerError);
 
-app.listen(PORT, () => {
-  // eslint-disable-next-line no-console
-  console.log(`Сервер работает на порту ${PORT}`);
-});
+app.listen(PORT);
