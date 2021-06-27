@@ -75,7 +75,7 @@ function createUser(req, res, next) {
 }
 
 function updateUser(req, res, next) {
-  const id = req.params.userId;
+  const { id } = req.params;
 
   return User.findByIdAndUpdate(
     id,
@@ -101,7 +101,7 @@ function updateUser(req, res, next) {
 }
 
 function updateAvatar(req, res, next) {
-  const id = req.params.userId;
+  const { id } = req.params;
 
   return User.findByIdAndUpdate(
     id,
