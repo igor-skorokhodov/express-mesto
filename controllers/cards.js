@@ -11,12 +11,13 @@ function getCards(req, res, next) {
 }
 
 function createCard(req, res, next) {
-  return Card.create({ ...req.body })
+  return Card.create({ ...req.body})
     .then((card) => {
       res.status(200).send(card);
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
+console.log(err)
         next(new ReqError('ошибка валидации'));
       } else {
         next(err);
