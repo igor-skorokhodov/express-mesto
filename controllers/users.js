@@ -24,7 +24,6 @@ function getUser(req, res, next) {
   return User.findById(id)
     .orFail(new NotFoundError('Пользователь не найден'))
     .then((user) => {
-      res.user.password = null;
       res.status(200).send({ user });
     })
     .catch((err) => {
@@ -41,7 +40,6 @@ function aboutUser(req, res, next) {
 
   return User.findById(id)
     .then((user) => {
-      res.user.password = null;
       res.status(200).send({ user });
     })
     .catch(next);
@@ -94,7 +92,6 @@ function updateUser(req, res, next) {
     },
   )
     .then((user) => {
-      res.user.password = null;
       res.status(200).send({ user });
     })
     .catch((err) => {
@@ -118,7 +115,6 @@ function updateAvatar(req, res, next) {
     },
   )
     .then((user) => {
-      res.user.password = null;
       res.status(200).send({ user });
     })
     .catch((err) => {
@@ -140,7 +136,6 @@ function login(req, res, next) {
   User.findOne({ email })
     .select('+password')
     .then((user) => {
-      res.user.password = null;
       if (!user) {
         throw new AuthError('Неправильные почта или пароль');
       }
