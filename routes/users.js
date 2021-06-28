@@ -15,7 +15,7 @@ userRoutes.get('/users', auth, getUsers);
 
 userRoutes.get('/users/:userId',
   celebrate({
-    params: Joi.object()
+    headers: Joi.object()
       .keys({
         userId: Joi.string().hex().length(24),
       })
@@ -26,7 +26,7 @@ userRoutes.get('/users/me', auth, aboutUser);
 
 userRoutes.patch('/users/me',
   celebrate({
-    params: Joi.object()
+    headers: Joi.object()
       .keys({
         userId: Joi.string().hex().length(24),
       })
@@ -40,7 +40,7 @@ userRoutes.patch('/users/me',
 
 userRoutes.patch('/users/me/avatar',
   celebrate({
-    params: Joi.object()
+    headers: Joi.object()
       .keys({
         userId: Joi.string().hex().length(24),
       })
