@@ -24,6 +24,7 @@ function getUser(req, res, next) {
   return User.findById(id)
     .orFail(new NotFoundError('Пользователь не найден'))
     .then((user) => {
+      user.password = null;
       res.status(200).send({ user });
     })
     .catch((err) => {
@@ -40,6 +41,7 @@ function aboutUser(req, res, next) {
 
   return User.findById(id)
     .then((user) => {
+      user.password = null;
       res.status(200).send({ user });
     })
     .catch(next);
@@ -71,7 +73,7 @@ function createUser(req, res, next) {
       password: hash,
     }))
     .then((user) => {
-      res.user.password = null;
+      user.password = null;
       res.status(200).send({ user });
     })
     .catch(next);
@@ -92,6 +94,7 @@ function updateUser(req, res, next) {
     },
   )
     .then((user) => {
+      user.password = null;
       res.status(200).send({ user });
     })
     .catch((err) => {
@@ -115,6 +118,7 @@ function updateAvatar(req, res, next) {
     },
   )
     .then((user) => {
+      user.password = null;
       res.status(200).send({ user });
     })
     .catch((err) => {
@@ -146,6 +150,7 @@ function login(req, res, next) {
         const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret', {
           expiresIn: '7d',
         });
+        user.password = null;
         res.send({ token, user });
       });
     })
