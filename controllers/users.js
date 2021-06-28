@@ -19,7 +19,7 @@ function getUsers(req, res, next) {
 }
 
 function getUser(req, res, next) {
-  const id = req.user._id;
+  const id = req.headers.userId;
 
   return User.findById(id)
     .orFail(new NotFoundError('Пользователь не найден'))
@@ -34,7 +34,7 @@ function getUser(req, res, next) {
 }
 
 function aboutUser(req, res, next) {
-  const { id } = req.params;
+  const id = req.headers.userId;
 
   return User.findById(id)
     .then((user) => res.status(200).send({ user }))
@@ -74,7 +74,7 @@ function createUser(req, res, next) {
 }
 
 function updateUser(req, res, next) {
-  const { id } = req.params;
+  const id = req.headers.userId;
 
   return User.findByIdAndUpdate(
     id,
