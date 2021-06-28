@@ -19,7 +19,7 @@ function getUsers(req, res, next) {
 }
 
 function getUser(req, res, next) {
-  const { id } = req.params;
+  const id = req.user._id;
 
   return User.findById(id)
     .orFail(new NotFoundError('Пользователь не найден'))
